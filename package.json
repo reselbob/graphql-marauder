@@ -1,0 +1,29 @@
+{
+  "name": "graphql-marauder",
+  "version": "1.0.0",
+  "description": "A project that demonstrates how to implement high volume message streaming under GraphQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reselbob/graphql-marauder.git"
+  },
+  "keywords": [
+    "graphql"
+  ],
+  "author": "Bob Reselman <reselbob@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reselbob/graphql-marauder/issues"
+  },
+  "homepage": "https://github.com/reselbob/graphql-marauder#readme",
+  "dependencies": {
+    "apollo-server": "^2.9.8",
+    "graphql": "^14.5.8",
+    "graphql-subscriptions": "^1.1.0",
+    "ioredis": "^4.14.1",
+    "mongoose": "^5.7.10"
+  }
+}

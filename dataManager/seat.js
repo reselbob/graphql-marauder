@@ -4,6 +4,7 @@ const seat = mongoose.Schema({
     section:{type: String, required: true},
     status:{type: String, required: true},
     venue: {
+        id: {type: String,required: true},
         name: {type: String, required: true},
         address: {type: String, required: true},
         city: {type: String, required: true},

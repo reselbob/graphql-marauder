@@ -1,4 +1,5 @@
-
+const { RedisPubSub } = require('graphql-redis-subscriptions');
+const Redis = require('ioredis');
 
 const MESSAGE_BROKER_HOST = process.env.MESSAGE_BROKER_HOST;
 if(!MESSAGE_BROKER_HOST) throw new Error('No URL value defined for the required environment variable, MESSAGE_BROKER_HOST');
@@ -19,7 +20,7 @@ const pubsub = new RedisPubSub({
     subscriber: new Redis(options)
 });
 
-module.exports = {MESSAGE_BROKER_HOST, MESSAGE_BROKER_PORT, pubsub}
+module.exports = {MESSAGE_BROKER_HOST, MESSAGE_BROKER_PORT, pubsub};
 
 
 

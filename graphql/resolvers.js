@@ -1,37 +1,70 @@
-const {getCustomer, getCustomers, setCustomer, getSeat, getSeats, setSeat} = require('../dataManager');
-const {pubsub} = require('../dataManager')
+const {getAssignedSeats, getAssignedSeat, setAssignedSeat, getCustomer, getCustomers, setCustomer, getSeat, getSeats, setSeat, Seat, Customer, AssignedSeat} = require('../dataManager');
+const {pubsub} = require('../messageBroker');
 const SEAT_STATUS_TOPIC = 'Seat_Status_Topic';
 
-const getSeat = async (id)=> {
+const _getSeat = async (id)=> {
     return await getSeat(id);
 };
-const getSeats = async ()=> {
+const _getSeats = async ()=> {
     return await getSeats();
 };
 
-const reserveSeat = async (seat)=> {
-    seat.SeatStatus = 'RESERVED';
-    pubsub.publish(SEAT_STATUS_TOPIC, { seatStatus: seat});
-    return await setSeat(seat);
+const _reserveAssignedSeat = async (data)=> {
+    const assignedSeat = await getAssignedSeat(data.id);
+    assignedSeat.seat = data.seat;
+    assignedSeat.seat.SeatStatus = 'RESERVED';
+
+    //save the customer
+    const cust = await _setCustomer(data.customer);
+    assignedSeat.customer = cust;
+
+    //do the seat assignment
+    await pubsub.publish(SEAT_STATUS_TOPIC, { status: 'RESERVED', message: 'Reserving Seat', assignedSeat: assignedSeat});
+    const result = await setAssignedSeat(assignedSeat);
+    await pubsub.publish(SEAT_STATUS_TOPIC, {status: 'RESERVED',  message: 'Reserved Assigned', assignedSeat: result});
+
+    return result;
 };
-const saveSeat = async (seat)=> {
-    seat.SeatStatus = 'SOLD';
+const _saveSeat = async (seat)=> {
+    seat.SeatStatus = 'OPEN';
     const result = await setSeat(seat);
-    pubsub.publish(SEAT_STATUS_TOPIC, { seatStatus: result});
+    await pubsub.publish(SEAT_STATUS_TOPIC, { seat: result});
+    return result;
 };
 
-const getCustomer = async (id)=> {
+const _buyAssignedSeat = async (id)=> {
+    //get the seat
+    const assignedSeat  = await getAssignedSeat(id)
+    //change the seat status
+    assignedSeat.seat.status = 'SOLD';
+    assignedSeat.dateSold = new Date();
+
+
+    //save the customer
+    const cust = await _setCustomer(assignedSeat.customer);
+    assignedSeat.customer = cust.id;
+    await pubsub.publish(SEAT_STATUS_TOPIC, { status: 'Sold', message: 'Buying Seat', assignedSeat: assignedSeat});
+    const result = await assignedSeat.save();
+    await pubsub.publish(SEAT_STATUS_TOPIC, { status: 'Sold', message: 'Bought Seat', assignedSeat: result});
+};
+const _getCustomer = async (id)=> {
     return await getCustomer(id);
 };
-const getCustomers = async ()=> {
+const _getCustomers = async ()=> {
     return await getCustomers();
 };
 
-const setCustomer = async (customer)=> {
+const _setCustomer = async (customer)=> {
     return await setCustomer(customer);
 };
 
+const _getReservedSeats = async ()=> {
+    return await getAssignedSeats('RESERVED');
+};
 
+const _getSoldSeats = async ()=> {
+    return await getAssignedSeats('SOLD');
+};
 
 module.exports = {
     Object: {
@@ -51,22 +84,29 @@ module.exports = {
         }
     },
     Query: {
-        seats: async () => {return await getSeats()},
+        soldSeats: async () => {return await _getSoldSeats()},
+        reservedSeats: async () => {return await _getReservedSeats()},
+        seats: async () => {return await _getSeats()},
         seat: async (parent, args, context) => {
-            if(args.id && args.id.length > 0) return await getSeat(args.id);
+            if(args.id && args.id.length > 0) return await _getSeat(args.id);
         },
-        customers: async () => {return await getCustomers()},
+        customers: async () => {return await _getCustomers()},
         customer: async (parent, args, context) => {
-            if(args.id && args.id.length > 0) return await getCustomer(args.id);
+            if(args.id && args.id.length > 0) return await _getCustomer(args.id);
         }
     },
     Mutation: {
         saveSeat:  async (parent, args) => {
-            return await saveSeat(args.seat);
+            return await _saveSeat(args.seat);
         },
-
-        reserveSeat:  async (parent, args) => {
-            return await reserveSeat(args.seat);
+        reserveAssignedSeat:  async (parent, args) => {
+            return await _reserveAssignedSeat(args.assignedSeat);
+        },
+        saveCustomer:  async (parent, args) => {
+            return await _setCustomer(args.customer);
+        },
+        buyAssignedSeat:  async (parent, args) => {
+            return await _buyAssignedSeat(args.assignedSeat);
         }
     },
     Subscription: {
@@ -76,7 +116,7 @@ module.exports = {
         onSeatReserved: {
             subscribe: () => pubsub.asyncIterator(SEAT_STATUS_TOPIC)
         },
-        onSeatSole: {
+        onSeatSold: {
             subscribe: () => pubsub.asyncIterator(SEAT_STATUS_TOPIC)
         },
     }

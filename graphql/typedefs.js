@@ -16,22 +16,19 @@ module.exports =  gql`
         number: String
         section: String
     }
-
-    input CustomerInput {
-        firstName: String
-        lastName: String
-        email: String
-    }
-
+    
     type Query {
+        soldSeats: [Seat]
+        reservedSeats: [Seat]
         seats: [Seat]
         seat(id: ID!): Seat
         customers: [Customer]
         customer(id: ID!): Customer
     }
     type Mutation {
-        reserveSeat(seat: AssignedSeatInput): Seat
-        saveSeat(seat: AssignedSeatInput): Seat
+        reserveAssignedSeat(assignedSeat: AssignedSeatInput): AssignedSeat
+        buyAssignedSeat(assignedSeat: AssignedSeatInput): AssignedSeat
+        saveSeat(seat: SeatInput!): Seat
         saveCustomer(customer: CustomerInput): Customer
     }
 

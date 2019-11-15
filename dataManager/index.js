@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
 const moption = {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -6,127 +7,99 @@ const moption = {
 
 if (!process.env.MONGODB_URL) throw new Error('The required environment variable, MONGODB_URL does not exist or has no value');
 
-const Customer = require('./customer');
-const Seat = require('./seat');
-const AssignedSeat = require('./assignedSeat');
+const Venue = require('./venue');
 
-const getCustomer = async (id) => {
+const searchByStatus = async (venueId, status)=> {
     const item = await mongoose.connect(process.env.MONGODB_URL, moption)
         .then(result => {
-            if (!id) return new Customer();
-            return Customer.findById(id);
+            const rtn = Venue.find({_id: venueId, seats: { $elemMatch: {status: status}} });
+            console.log(rtn);
+            return rtn;
         });
+    if(item.length > 0){
+        const arr =  item[0].toObject({ getters: true }).seats;
+        return _.filter(arr, { 'status': status});
+    }
     return item;
+}
+
+const getSoldSeats = async (venueId) => {
+    return await searchByStatus(venueId, 'SOLD');
 };
 
-const getCustomers = async () => {
-    const item = await mongoose.connect(process.env.MONGODB_URL, moption)
-        .then(result => {
-            return Customer.find({});
-        });
-    return item;
+const getOpenSeats = async (venueId) => {
+    return await searchByStatus(venueId, 'OPEN');
 };
 
-const setCustomer = async (data) => {
-    const c = await Customer.findOne({email: data.email.toLowerCase()});
-    //if the customer exists, leave
-    if (c) return c;
-    const item = await mongoose.connect(process.env.MONGODB_URL, moption)
-        .then(result => {
-            return getCustomer()
-        })
-        .then(customer => {
-            customer.firstName = data.firstName;
-            customer.lastName = data.lastName;
-            customer.email = data.email.toLowerCase();
-            return customer.save();
-        });
-    return item;
+const getReservedSeats = async (venueId) => {
+    return await searchByStatus(venueId, 'RESERVED');
 };
 
-const getAssignedSeat = async (id) => {
+const getVenues = async ()=>{
     const item = await mongoose.connect(process.env.MONGODB_URL, moption)
         .then(result => {
-            if (!id) return new AssignedSeat();
-            return AssignedSeat.findById(id);
+            return Venue.find({});
         });
     return item;
+}
+const getVenue = async (id)=>{
+    const item = await mongoose.connect(process.env.MONGODB_URL, moption)
+        .then(result => {
+            if(!id) return new Venue();
+            return Venue.findById(id);
+        });
+    return item;
+
 };
 
-const getAssignedSeats = async (status) => {
-    const item = await mongoose.connect(process.env.MONGODB_URL, moption)
-        .then(result => {
-            if (!status) return AssignedSeat.find({});
-            return AssignedSeat.find({
-                "seat.status": status.toUpperCase()
-            })
-        })
-        .then(result => {
-            return result
-        });
-    return item;
+const reserveSeat = async (seat)=>{
+    seat.status = 'RESERVED';
+    return await updateSeat(seat)
+};
+const buySeat = async (seat)=>{
+    seat.status = 'SOLD';
+    return await updateSeat(seat)
+};
+const releaseSeat = async (seat)=>{
+    seat.status = 'OPEN';
+    return await updateSeat(seat)
 };
 
-const getSeat = async (id) => {
+const updateSeat = async (seat) =>{
     const item = await mongoose.connect(process.env.MONGODB_URL, moption)
         .then(result => {
-            if (!id) return new Seat();
-            return Seat.findById(id);
+            //const rtn = Venue.find({_id: seat.venueId, seats: { $elemMatch: {number: seat.number}} });
+            const rtn = Venue.update({_id: seat.venueId, seats: { $elemMatch: {number: seat.number}} },
+                {$set: {"seats.$.status": seat.status,"seats.$.customer": seat.customer}});
+            console.log(rtn);
+            return rtn;
         });
-    return item;
-};
+    if(item.ok){
+        const followup = await mongoose.connect(process.env.MONGODB_URL, moption)
+            .then(result => {
+                return Venue.find({_id: seat.venueId, seats: { $elemMatch: {number: seat.number}} }).lean();
+            });
+        if(followup.length > 0){
+           const obj = _.find(followup[0].seats, { 'number':  seat.number});
+           console.log({message: 'Found seat', seat:obj});
+           if(obj) obj.id = obj._id.toString();
+           return obj;
+        }
+    }
+    return item
 
-const getSeats = async () => {
-    const item = await mongoose.connect(process.env.MONGODB_URL, moption)
-        .then(result => {
-            return Seat.find({});
-        });
-    return item;
-};
 
-const setAssignedSeat = async (data) => {
-    const customer = await setCustomer(data.customer);
-    const item = await mongoose.connect(process.env.MONGODB_URL, moption)
-        .then(result => {
-            return getAssignedSeat(data.id)
-        })
-        .then(assignedSeat => {
-            assignedSeat.seat = data.seat.toObject({getters: true});
-            assignedSeat.customer = customer.toObject({getters: true});
-            return assignedSeat.save();
-        });
-
-    return item;
-};
-
-const setSeat = async (data) => {
-    const item = await mongoose.connect(process.env.MONGODB_URL, moption)
-        .then(result => {
-            return getSeat()
-        })
-        .then(seat => {
-            seat.section = data.section;
-            seat.number = data.number;
-            seat.status = data.status;
-            seat.venue = data.venue;
-            return seat.save();
-        });
-    return item;
 };
 
 module.exports = {
-    getAssignedSeats,
-    getAssignedSeat,
-    setAssignedSeat,
-    getCustomer,
-    getCustomers,
-    setCustomer,
-    getSeat,
-    getSeats,
-    setSeat,
-    Seat,
-    Customer,
-    AssignedSeat
+    getVenues,
+    getVenue,
+    getReservedSeats,
+    getOpenSeats,
+    getSoldSeats,
+    reserveSeat,
+    buySeat,
+    releaseSeat
 };
 
 

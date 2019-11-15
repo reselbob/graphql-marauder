@@ -2,7 +2,7 @@ const { ApolloServer, gql } = require('apollo-server');
 const typeDefs = require('./graphql/typedefs');
 const resolvers = require('./graphql/resolvers');
 const subscriptions = require('./graphql/subscriptions');
-const {seedSeats} = require('./utilities');
+const {seedVenues} = require('./utilities');
 
 const PORT = process.env.PORT || 4000;
 
@@ -14,9 +14,9 @@ const server = new ApolloServer({
 
 const shutdown = ()=> {
     server.stop();
-}
+};
 
-seedSeats()
+seedVenues()
     .then(() => {
         return server.listen(PORT)
     })
@@ -28,4 +28,4 @@ seedSeats()
     });
 
 //Export the server to make it available to unit and API tests
-module.exports = {shutdown, seedSeats};
+module.exports = {shutdown, seedVenues};

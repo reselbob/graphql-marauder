@@ -10,32 +10,24 @@ module.exports =  gql`
         RESERVED
         SOLD
     }
-
-    input SeatInput {
-        venueId: String
-        number: String
-        section: String
-    }
     
     type Query {
-        soldSeats: [Seat]
-        reservedSeats: [Seat]
-        seats: [Seat]
-        seat(id: ID!): Seat
-        customers: [Customer]
-        customer(id: ID!): Customer
+        venues: [Venue]
+        venue(id: ID!): Venue
+        soldSeats(venueId: ID!): [Seat]
+        reservedSeats(venueId: ID!): [Seat]
+        openSeats(venueId: ID!):[Seat]
     }
     type Mutation {
-        reserveAssignedSeat(assignedSeat: AssignedSeatInput): AssignedSeat
-        buyAssignedSeat(assignedSeat: AssignedSeatInput): AssignedSeat
-        saveSeat(seat: SeatInput!): Seat
-        saveCustomer(customer: CustomerInput): Customer
+        reserveSeat(seat: SeatInput): Seat
+        buySeat(seat: SeatInput): Seat
+        releaseSeat(seat: SeatInput): Seat
     }
 
     type Subscription {
         onSeatReserved: SeatEvent
         onSeatSold: SeatEvent
-        onSeatOpen: SeatEvent
+        onSeatReleased: SeatEvent
     }
     type Venue {
         id: ID
@@ -45,23 +37,23 @@ module.exports =  gql`
         state_province: String
         postal_code: String
         country: String
+        seats: [Seat]
     }
-
-    input AssignedSeatInput {
-        seat: SeatInput
-        customer: CustomerInput
-    }
-    type AssignedSeat {
-        seat: Seat
+    
+    type Seat {
+        id:ID
+        number: String!
+        section: String!
+        status: SeatStatus!
         customer: Customer
     }
 
-    type Seat {
-        id:ID
-        venue: Venue
-        number: String
-        section: String
-        status: SeatStatus
+    input SeatInput {
+        venueId: ID!
+        """The seat number"""
+        number: String!
+        status: String
+        customer: CustomerInput!
     }
 
     input CustomerInput {
@@ -77,9 +69,12 @@ module.exports =  gql`
     }
 
     type SeatEvent {
-        status: SeatStatus
-        assignedSeat: AssignedSeat
-        createDate: Date
+        message: String
+        venueId: ID
+        seatId: ID
+        number: String!
+        section: String
+        status: String!
         changeDate: Date
     }
 `;

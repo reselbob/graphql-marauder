@@ -1,18 +1,19 @@
-const uuidv4 = require('uuid/v4');
-const {getSeats, setSeat} = require('../dataManager');
+const {getVenue, getVenues} = require('../dataManager');
+const faker = require('faker');
 
-const uuid = uuidv4();
-const getVenueSync = {
-    id: uuid,
-    name: 'Happyville Community Stadium',
-    address: '123 Happy Street',
-    city: 'Des Moines',
-    state_province: 'IA',
-    postal_code: '50311',
-    country: 'USA'
+const createVenueSync = (venue) =>{
+    venue.name = faker.lorem.words(2);
+    venue.address = faker.address.streetAddress();
+    venue.city = faker.address.city();
+    venue.state_province = faker.address.state();
+    venue.postal_code = faker.address.zipCode();
+    venue.country = 'USA';
+
+    return venue;
 };
 
-const createSeats = async () => {
+const createSeatsSync = () => {
+    const arr = [];
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     for (let i = 0; i < alphabet.length; i++) {
         const letter = alphabet[i];
@@ -21,23 +22,30 @@ const createSeats = async () => {
             seat.number = letter + j;
             seat.section = 'Section-' + letter;
             seat.status = 'OPEN';
-            seat.venue = getVenueSync;
-            await setSeat(seat);
+            arr.push(seat);
         }
     }
+    return arr;
 };
 
 
-const seedSeats = async () => {
-    const seats = await getSeats();
-    if (!seats || seats.length < 1) {
-        console.log({message: 'Start Seeding Seats', date: new Date()});
-        await createSeats();
-        console.log({message: 'End Seeding Seats', date: new Date()});
-    } else {
-        console.log({message: 'Seats Already Seeded', date: new Date()})
+const seedVenues = async () => {
+    const venues = await getVenues();
+    if(!venues || venues.length < 1){
+        console.log({message: 'Start Seeding Venue', date: new Date()});
+        //make 3 venues
+        for(let i = 0; i< 3;i++){
+            const seats = createSeatsSync();
+            const venue = (createVenueSync(await getVenue()));
+            seats.forEach(seat => venue.seats.push(seat));
+            const result =  await venue.save();
+            console.log(result);
+        }
+        console.log({message: 'End Seeding Venue', date: new Date()});
+    }else{
+        console.log({message: 'Venues are already seeded', date: new Date()});
     }
 };
 
-module.exports = {seedSeats};
+module.exports = {seedVenues};
 

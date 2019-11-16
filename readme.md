@@ -2,6 +2,58 @@
 
 A project that demonstrates how to implement high volume message streaming under GraphQL
 
+## Dependency services requires
+* MongoDB
+* Redis
+
+### Setting the environment variable `MONGODB_URL`
+
+### Setting Redis environment variables
+
+**Setting `MESSAGE_BROKER_HOST`**
+
+**Setting `MESSAGE_BROKER_PORT`** (optional)
+
+## Automatic Data Seeding
+
+## Understanding the Seat Saver API
+
+
+
+### Venue
+
+```graphql
+    type Venue {
+        id: ID
+        name: String
+        address: String
+        city: String
+        state_province: String
+        postal_code: String
+        country: String
+        seats: [Seat]
+    }
+```
+
+### Seat
+
+```graphql
+  type Seat {
+        id:ID
+        number: String!
+        section: String!
+        status: SeatStatus!
+        customer: Customer
+    }
+```
+
+```graphql
+    type Customer {
+        firstName: String
+        lastName: String
+        email: String
+    }
+```
 
 ## Subscriptions and Mutations
 
@@ -9,7 +61,7 @@ A project that demonstrates how to implement high volume message streaming under
 
 Sample common query variable
 
-```
+```json
 {
   "seat": {
     "venueId": "5dce2cabba1d1d320106525a",
@@ -24,7 +76,7 @@ Sample common query variable
 ```
 
 ***reserveSeat***
-```
+```graphql
 mutation reserveSeat($seat: SeatInput!) {
   reserveSeat(seat: $seat) {
   	id
@@ -37,7 +89,7 @@ mutation reserveSeat($seat: SeatInput!) {
 
 ***Output***
 
-```
+```json
 {
   "data": {
     "reserveSeat": {
@@ -52,7 +104,7 @@ mutation reserveSeat($seat: SeatInput!) {
 
 ***onSeatReserved***
 
-```
+```graphql
 subscription onSeatReserved{
   onSeatReserved{
     venueId
@@ -67,7 +119,7 @@ subscription onSeatReserved{
 
 ***Output***
 
-```
+```json
 {
   "data": {
     "onSeatReserved": {
@@ -86,7 +138,7 @@ subscription onSeatReserved{
 
 ***buySeat***
 
-```
+```graphql
 mutation buySeat($seat: SeatInput!) {
   buySeat(seat: $seat) {
   	id
@@ -98,7 +150,7 @@ mutation buySeat($seat: SeatInput!) {
 ```
 
 ***Output***
-```
+```json
 {
   "data": {
     "buySeat": {
@@ -113,7 +165,7 @@ mutation buySeat($seat: SeatInput!) {
 
 ***onSeatSold***
 
-```
+```graphql
 subscription onSeatSold{
   onSeatSold{
     venueId
@@ -127,7 +179,7 @@ subscription onSeatSold{
 ```
 
 ***Output***
-```
+```json
 {
   "data": {
     "onSeatSold": {
@@ -144,7 +196,7 @@ subscription onSeatSold{
 ### Releasing a Seat
 
 ***releaseSeat***
-```
+```graphql
 mutation releaseSeat($seat: SeatInput!) {
   releaseSeat(seat: $seat) {
   	id
@@ -155,7 +207,7 @@ mutation releaseSeat($seat: SeatInput!) {
 }
 ```
 ***Output***
-```
+```json
 {
   "data": {
     "releaseSeat": {
@@ -169,7 +221,7 @@ mutation releaseSeat($seat: SeatInput!) {
 ```
 ***onSeatReleased***
 
-```
+```graphql
 subscription onSeatReleased{
   onSeatReleased{
     venueId
@@ -184,7 +236,7 @@ subscription onSeatReleased{
 ```
 
 ***Output***
-```
+```json
 {
   "data": {
     "onSeatReleased": {

@@ -1,0 +1,36 @@
+version: '3'
+services:
+  seatsaver:
+    build: ./
+    environment:
+      MESSAGE_BROKER_HOST: redis
+      MONGODB_URL: http://mongodb:3306
+    ports:
+      - "4000:4000"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: seatsaver.activity
+    networks:
+      - seatsaver
+  mongodb:
+    image: mongodb
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: seatsaver.activity
+    networks:
+      - seatsaver
+  redis:
+    image: redis
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: seatsaver.activity
+    networks:
+      - reselbob_travel
+networks:
+  seatsaver:

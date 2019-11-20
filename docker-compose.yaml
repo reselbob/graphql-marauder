@@ -15,7 +15,7 @@ services:
     networks:
       - seatsaver
   mongodb:
-    image: mongodb
+    image: mongo
     logging:
       driver: "fluentd"
       options:

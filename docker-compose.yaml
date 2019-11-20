@@ -4,32 +4,17 @@ services:
     build: ./
     environment:
       MESSAGE_BROKER_HOST: redis
-      MONGODB_URL: http://mongodb:3306
+      MONGODB_URL: http://mongodb:27017
     ports:
       - "4000:4000"
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: seatsaver.activity
     networks:
       - seatsaver
   mongodb:
     image: mongo
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: seatsaver.activity
     networks:
       - seatsaver
   redis:
     image: redis
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: seatsaver.activity
     networks:
       - seatsaver
 networks:

@@ -31,6 +31,6 @@ services:
         fluentd-address: localhost:24224
         tag: seatsaver.activity
     networks:
-      - reselbob_travel
+      - seatsaver
 networks:
   seatsaver:

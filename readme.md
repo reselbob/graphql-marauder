@@ -2,6 +2,24 @@
 
 A project that demonstrates how to implement high volume message streaming under GraphQL
 
+# Running Seat Saver as a Docker Compose Application
+
+**Step 1:** Clone the source into your host machine.
+
+`git clone https://github.com/reselbob/seat-saver`
+
+**Step 2:** Go to the project directory
+
+`cd seat-saver`
+
+**Step 3:** Spin up the `docker-compose` project
+
+`docker-compose up`
+
+Seat saver will be running on port `4000`.
+
+# Running Seat Saver as a Standalone Application
+
 ## Dependency services requires
 * MongoDB
 * Redis

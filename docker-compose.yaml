@@ -4,7 +4,7 @@ services:
     build: ./
     environment:
       MESSAGE_BROKER_HOST: redis
-      MONGODB_URL: http://mongodb:27017
+      MONGODB_URL: mongodb://mongodb_service:27017/seatsaver
     ports:
       - "4000:4000"
     networks:

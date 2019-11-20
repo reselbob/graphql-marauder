@@ -2,6 +2,8 @@
 
 A project that demonstrates how to implement high volume message streaming under GraphQL
 
+Seat Saver will automatically inject preliminary data into the datastore upon startup.
+
 # Running Seat Saver as a Docker Compose Application
 
 **Step 1:** Clone the source into your host machine.
@@ -20,6 +22,8 @@ Seat saver will be running on port `4000`.
 
 # Running Seat Saver as a Standalone Application
 
+TO BE PROVIDED
+
 ## Dependency services requires
 * MongoDB
 * Redis
@@ -31,8 +35,6 @@ Seat saver will be running on port `4000`.
 **Setting `MESSAGE_BROKER_HOST`**
 
 **Setting `MESSAGE_BROKER_PORT`** (optional)
-
-## Automatic Data Seeding
 
 ## Understanding the Seat Saver API
 

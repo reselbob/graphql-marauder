@@ -1,10 +1,41 @@
 # Seat Saver
 
-A project that demonstrates how to implement high volume message streaming under GraphQL
+Seat Saver is a project that demonstrates how to implement high volume message streaming under GraphQL.
 
-Seat Saver will automatically inject preliminary data into the datastore upon startup.
+Seat Saver in an GraphQL API that provides seat reservations services. The API exposes a set of types that describe seats in a venue, as shown in the figure below:
 
-# Running Seat Saver as a Docker Compose Application
+![Seat Saver Data Model](images/seat-saver-data-model.png)
+
+The Seat Saver API allows developers to reserve and then buy a seat in within a given venue. Also, the Seat Saver API publishes a set of subscriptions that provides streams of messages according to events. These events are:
+
+* `onSeatReserved`
+* `onSeatSold`
+* `onSeatReleased`
+
+**NOTE:** Seat Saver will automatically inject preliminary seed data into the datastore upon startup. This seed data describes 3 venues with each venue having a number of seats accordingly.
+
+There are two ways to get the Seat Save project up and running. One way is to use a Docker Compose installation on a single host machine. The Docker Compose installation will install an instance of MongoDB and Redis as containers on the host machine.
+
+The second way is to install seat saver as a standalone application on the host. This method requires configuring Seat Saver with references to running instances of MongoDB and Redis. These instances can be out on the internet or on an internal network. The references to MongoDB and Redis are defined their URLs. Typically these URLs will container username/password information.
+
+These URLS need to be assigned to specific environment variables on the host machine(s) where Seat Saver is running.
+
+The environment variable for the MongoDB reference is:
+
+`MONGODB_URL`
+
+The environment variables for the Redis reference are:
+
+`MESSAGE_BROKER_HOST`
+
+`MESSAGE_BROKER_PORT` (optional)
+
+The sections that follow decribe how to setup Seat Saver as an application running under Docker Componse as well as running Seat Saver as a standalone application with references to MongoDB and Redis.
+
+Also, there are sections that follow that provide examples for working with GraphQL `queries`, `mutations` and `subscriptions` in the Seat Saver API.
+
+
+## Running Seat Saver as a Docker Compose Application
 
 (You can run this project under a Katabcoda Ubuntu Playground. Click [here](https://katacoda.com/courses/ubuntu/playground) to
 go to eh Ubuntu Playground.)
@@ -25,23 +56,23 @@ Seat saver will be running on port `4000`.
 
 ![Seat-Saver 1](./images/seat-saver-01.png)
 
-# Running Seat Saver as a Standalone Application
+## Running Seat Saver as a Standalone Application
 
 TO BE PROVIDED
 
-## Dependency services requires
+### Dependency services requires
 * MongoDB
 * Redis
 
-### Setting the environment variable `MONGODB_URL`
+#### Setting the environment variable `MONGODB_URL`
 
-### Setting Redis environment variables
+#### Setting Redis environment variables
 
 **Setting `MESSAGE_BROKER_HOST`**
 
 **Setting `MESSAGE_BROKER_PORT`** (optional)
 
-## Understanding the Seat Saver API
+## Working with the Seat Saver API
 
 
 

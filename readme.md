@@ -6,6 +6,9 @@ Seat Saver will automatically inject preliminary data into the datastore upon st
 
 # Running Seat Saver as a Docker Compose Application
 
+(You can run this project under a Katabcoda Ubuntu Playground. Click [here](https://katacoda.com/courses/ubuntu/playground) to
+go to eh Ubuntu Playground.)
+
 **Step 1:** Clone the source into your host machine.
 
 `git clone https://github.com/reselbob/seat-saver`

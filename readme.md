@@ -74,8 +74,6 @@ TO BE PROVIDED
 
 ## Working with the Seat Saver API
 
-
-
 ### Venue
 
 ```graphql
@@ -130,8 +128,10 @@ Sample common query variable
   }
 }
 ```
+----
 
-***reserveSeat***
+**reserveSeat**
+
 ```graphql
 mutation reserveSeat($seat: SeatInput!) {
   reserveSeat(seat: $seat) {
@@ -143,7 +143,7 @@ mutation reserveSeat($seat: SeatInput!) {
 }
 ```
 
-***Output***
+Output
 
 ```json
 {
@@ -157,8 +157,9 @@ mutation reserveSeat($seat: SeatInput!) {
   }
 }
 ```
+----
 
-***onSeatReserved***
+**onSeatReserved**
 
 ```graphql
 subscription onSeatReserved{
@@ -173,7 +174,7 @@ subscription onSeatReserved{
 }
 ```
 
-***Output***
+Output
 
 ```json
 {
@@ -192,7 +193,7 @@ subscription onSeatReserved{
 
 ### Buying a Seat
 
-***buySeat***
+**buySeat**
 
 ```graphql
 mutation buySeat($seat: SeatInput!) {
@@ -205,7 +206,8 @@ mutation buySeat($seat: SeatInput!) {
 }
 ```
 
-***Output***
+Output
+
 ```json
 {
   "data": {
@@ -218,8 +220,8 @@ mutation buySeat($seat: SeatInput!) {
   }
 }
 ```
-
-***onSeatSold***
+----
+**onSeatSold**
 
 ```graphql
 subscription onSeatSold{
@@ -234,7 +236,8 @@ subscription onSeatSold{
 }
 ```
 
-***Output***
+Output
+
 ```json
 {
   "data": {
@@ -248,10 +251,12 @@ subscription onSeatSold{
     }
   }
 }
+
 ```
 ### Releasing a Seat
 
-***releaseSeat***
+**releaseSeat**
+
 ```graphql
 mutation releaseSeat($seat: SeatInput!) {
   releaseSeat(seat: $seat) {
@@ -262,7 +267,9 @@ mutation releaseSeat($seat: SeatInput!) {
   }
 }
 ```
-***Output***
+
+Output
+
 ```json
 {
   "data": {
@@ -275,7 +282,9 @@ mutation releaseSeat($seat: SeatInput!) {
   }
 }
 ```
-***onSeatReleased***
+
+----
+**onSeatReleased**
 
 ```graphql
 subscription onSeatReleased{
@@ -291,7 +300,8 @@ subscription onSeatReleased{
 }
 ```
 
-***Output***
+Output
+
 ```json
 {
   "data": {

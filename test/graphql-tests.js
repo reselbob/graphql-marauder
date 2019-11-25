@@ -32,7 +32,7 @@ after((done) => {
 });
 
 describe('GraphQL Basic Tests', () => {
-    it('Can Assign Seat person via GraphQL', (done) => {
+    it('Can change seat status', (done) => {
         const client = require('graphql-client')({
             url: 'http://localhost:4000'
         });

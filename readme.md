@@ -62,6 +62,10 @@ Seat saver will be running on port `4000`.
 
 ![Seat-Saver 1](./images/seat-saver-01.png)
 
+## Running Seat Saver as a Kubernetes Cluster
+
+`https://katacoda.com/javajon/courses/kubernetes-fundamentals/minikube`
+
 ## Running Seat Saver as a Standalone Application
 
 TO BE PROVIDED

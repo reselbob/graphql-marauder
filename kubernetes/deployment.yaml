@@ -31,6 +31,16 @@ spec:
                 secretKeyRef:
                   name: seatsaver-data
                   key: message_broker_host
+            - name: MESSAGE_BROKER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: seatsaver-data
+                  key: message_broker_port
+            - name: MESSAGE_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: seatsaver-data
+                  key: message_broker_password
       initContainers:
         - name: init-myservice
           image: busybox:1.31

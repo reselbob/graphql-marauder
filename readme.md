@@ -34,6 +34,8 @@ The environment variables for the Redis reference are:
 
 `MESSAGE_BROKER_PORT` (optional)
 
+`MESSAGE_BROKER_PASSWORD` (optional)
+
 The sections that follow decribe how to setup Seat Saver as an application running under Docker Componse as well as running Seat Saver as a standalone application with references to MongoDB and Redis.
 
 Also, there are sections that follow that provide examples for working with GraphQL `queries`, `mutations` and `subscriptions` in the Seat Saver API.

@@ -54,24 +54,27 @@ module.exports = {
     },
     Mutation: {
         reserveSeat:  async (parent, args) => {
-            args.seat.status = 'RESERVED';
+            args.seat.status = 'RESERVING';
             await pubsub.publish(SEAT_STATUS_TOPIC, {onSeatReserved:createSeatPayloadSync(args.seat, 'Reserving Seat')});
+            args.seat.status = 'RESERVED';
             const result = await reserveSeat(args.seat);
             result.venueId = args.seat.venueId; //yes, this is a hack.
             await pubsub.publish(SEAT_STATUS_TOPIC, {onSeatReserved:createSeatPayloadSync(result, 'Reserved Seat')});
             return result;
         },
         releaseSeat:  async (parent, args) => {
-            args.seat.status = 'RELEASED';
+            args.seat.status = 'RELEASING';
             await pubsub.publish(SEAT_STATUS_TOPIC, {onSeatReleased:createSeatPayloadSync(args.seat, 'Releasing Seat')});
+            args.seat.status = 'OPEN';
             const result =  await releaseSeat(args.seat);
             result.venueId = args.seat.venueId;
             await pubsub.publish(SEAT_STATUS_TOPIC, {onSeatReleased:createSeatPayloadSync(result, 'Released Seat')});
             return result;
         },
         buySeat:  async (parent, args) => {
-            args.seat.status = 'SOLD';
+            args.seat.status = 'SELLING';
             await pubsub.publish(SEAT_STATUS_TOPIC, {onSeatSold:createSeatPayloadSync(args.seat, 'Buying Seat')});
+            args.seat.status = 'SOLD';
             const result =   await buySeat(args.seat);
             result.venueId = args.seat.venueId;
             await pubsub.publish(SEAT_STATUS_TOPIC, {onSeatSold:createSeatPayloadSync(result, 'Bought Seat')});

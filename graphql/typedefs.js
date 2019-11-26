@@ -7,10 +7,13 @@ module.exports =  gql`
     
     enum SeatStatus {
         """The seat is open for reservation or sale"""
+        RELEASING
         OPEN
         """The seat has been reserved but not sold"""
+        RESERVING
         RESERVED
         """The seat has been sold"""
+        SELLING
         SOLD
     }
     
@@ -80,7 +83,7 @@ module.exports =  gql`
         seatId: ID
         number: String!
         section: String
-        status: String!
+        status: SeatStatus!
         changeDate: Date
     }
 `;

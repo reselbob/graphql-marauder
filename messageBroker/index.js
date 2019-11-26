@@ -20,7 +20,15 @@ const pubsub = new RedisPubSub({
     subscriber: new Redis(options)
 });
 
-module.exports = {MESSAGE_BROKER_HOST, MESSAGE_BROKER_PORT, pubsub};
+const validateMessageBroker = async ()=>{
+    const redis = new Redis(options);
+    const pong = await redis.ping().catch(e => {
+        throw new Error({message: `Cannot access Redis at ${MESSAGE_BROKER_HOST}:${MESSAGE_BROKER_PORT}`, error: e, date: new Date()});
+    });
+    return {status: 'OK', message: `Did successful test access to Redis at ${MESSAGE_BROKER_HOST}:${MESSAGE_BROKER_PORT}`, date: new Date()}
+};
+
+module.exports = {MESSAGE_BROKER_HOST, MESSAGE_BROKER_PORT, pubsub, validateMessageBroker};
 
 
 

@@ -91,7 +91,20 @@ const updateSeat = async (seat) =>{
 
 };
 
+const validateDataStore = async() => {
+    await mongoose.connect(process.env.MONGODB_URL, moption);
+    if(mongoose.connection.readyState === 0 || mongoose.connection.readyState === 0 ){
+        throw new Error({message: `Unable to connect to MongoDB with URL ${process.env.MONGODB_URL}`,
+            readyState: mongoose.connection.readyState,
+            date: new Date()})
+    }else{
+        const obj  = {message: `Did successful test connection to MongoDB at URL ${process.env.MONGODB_URL}`, date: new Date()};
+        return obj;
+    }
+};
+
 module.exports = {
+    validateDataStore,
     getVenues,
     getVenue,
     getReservedSeats,

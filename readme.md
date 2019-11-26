@@ -64,7 +64,19 @@ Seat saver will be running on port `4000`.
 
 ## Running Seat Saver as a Kubernetes Cluster
 
+You can use a `minikube` instance of the Katacoda interactive learning environment to install and run `seat-saver` as distributed, multi-instance application under Kubernetes. The following URL links to Katacoda's `minikube` playground.
+
 `https://katacoda.com/javajon/courses/kubernetes-fundamentals/minikube`
+
+**Step 1:** Clone the source into your host machine.
+
+`git clone https://github.com/reselbob/seat-saver`
+
+**Step 2:** Go to the project directory
+
+`cd seat-saver`
+
+MORE TO BE PROVIDED
 
 ## Running Seat Saver as a Standalone Application
 

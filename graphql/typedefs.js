@@ -6,14 +6,17 @@ module.exports =  gql`
     scalar Object
     
     enum SeatStatus {
-        """The seat is open for reservation or sale"""
+        """The seat is in the process of being released from RESERVED or SOLD status"""
         RELEASING
+        """The seat is open for reservation or sale."""
         OPEN
-        """The seat has been reserved but not sold"""
+        """The seat is in the process of being reserved."""
         RESERVING
+        """The seat has been reserved but not sold."""
         RESERVED
-        """The seat has been sold"""
+        """The seat is in the process of being sold."""
         SELLING
+        """The seat has been sold."""
         SOLD
     }
     
@@ -60,7 +63,7 @@ module.exports =  gql`
         venueId: ID!
         """The unique seat number"""
         number: String!
-        status: SeatStatus
+        """The customer interested in the seat"""
         customer: CustomerInput!
     }
     

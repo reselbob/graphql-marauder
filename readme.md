@@ -22,7 +22,7 @@ Also, you will need to have created or identified an Redis message broker server
 
 The **third way** is to install seat saver as a standalone application on the host. This method requires configuring Seat Saver with references to running instances of MongoDB and Redis. These instances can be out on the internet or on an internal network. The references to MongoDB and Redis are defined their URLs. Typically these URLs will container username/password information.
 
-These URLS need to be assigned to specific environment variables on the host machine(s) where Seat Saver is running.
+These URLs need to be assigned to specific environment variables on the host machine(s) where Seat Saver is running.
 
 The environment variable for the MongoDB reference is:
 
@@ -76,7 +76,100 @@ You can use a `minikube` instance of the Katacoda interactive learning environme
 
 `cd seat-saver`
 
-MORE TO BE PROVIDED
+**Step 3:** Run the bash script that creates a Docker repository on the local machine, creates the required Docker images from source code and adds them to the local Docker repository.
+
+`sh docker-seed.sh`
+
+You will get output similar to the following:
+
+```text
+Successfully tagged seatsaver:latest
+The push refers to repository [localhost:5000/seatsaver]
+9ff0dabcdea0: Pushed
+6c5e43a0e84c: Pushed
+129dd9cbb45d: Pushed
+2faeaaebb113: Pushed
+387bc77dd3f2: Pushed
+df64d3292fd6: Pushed
+beta: digest: sha256:ab15cd9bf6d5f9930c87fc40a373ad19da7f0651664f51ed28a1007af71c76e5 size: 1579
+{"repositories":["seatsaver"]}
+```
+
+**Step 4:** Navigate to the `kubernetes` directory
+
+`cd kubernetes`
+
+**Step 5:** Adjust the Kubernetes secret manifest file, `./kubernetes/secrets.yaml` by adding the location of and access information for the MongDB and Redis services.
+
+`vi secret.yaml`
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: seatsaver-data
+type: Opaque
+data:
+  mongodb_url: xxxxxxx
+  message_broker_host: xxxxxxx
+  message_broker_port: xxxxxxx
+  message_broker_password: xxxxxx
+```
+Replace `xxxxxx` with the information particular to the environment variable.
+
+**Step 6:** Run the bash script that creates the Kubernetes `secret`, `deployment`, and `service` for the Seat-Saver application.
+
+`sh k8s-gen.sh`
+
+You will get output as follows:
+
+```text
+secret/seatsaver-data created
+deployment.extensions/seatsaver created
+service/seatsaver created
+```
+
+**Step 7:** The Kubernetes service you installed is of `type: NodePort`. Thus, Kubernetes will assign an arbitrary port number over `30000` that binds to the port number exposed by the pod running the Seat-Saver container. To discover the NodePort port number type:
+
+`kubectl get services`
+
+You'll get output similar to the following:
+
+```text
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        11m
+seatsaver    NodePort    10.102.138.23   <none>        80:32538/TCP   3m57s
+```
+In the case above, the NodePort port number is `32538` and it binds to the pod/container port `80`. Your NodePort number will most likely be different.
+
+**Be advised!** The Seat-Saver application seeds the MongoDB datasource you declare with seed data on first initialization. The ramification of this seeding is that it might take a little time for Seat-Saver to come online upon first startup. Subsequent startups of Seat-Saver will go much faster once the intial seeding has executed.
+
+**Step 8:** Go to your web browser and access GraphQL Playground at the NodePort port number assigned by Kubernetes. If you are using Katacoda, go to `Select port to view on Host 1` by clicking the plus sign (+) on the Katacoda menu bar and then entering the NodePort port number.
+
+![Katacoda access 1](./images/katacoda-access-01.png)
+
+![Katacoda access 2](./images/katacoda-access-02.png)
+
+**Step 9:** You will be taken to the GraphQL Playground web page. Enter the following GraphQL query:
+
+```gql
+{
+  venues{
+    id
+    seats{
+      id
+      number
+      section
+      status
+    }
+  }
+}
+```
+
+This query will list all the venues and seats avaiable for reservation.
+
+![Katacoda access 3](./images/katacoda-access-03.png)
+
 
 ## Running Seat Saver as a Standalone Application
 

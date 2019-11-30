@@ -16,11 +16,11 @@ The Seat Saver API allows developers to reserve and then buy a seat in within a 
 
 There are three ways to get the Seat Save project up and running. The **first way** is to use a Docker Compose installation on a single host machine. The Docker Compose installation will install an instance of MongoDB and Redis as containers on the host machine.
 
-The **second way** is to run SeatSaver has a multi-instance distributed application in a Kubernetes cluster. To do this you will need to have created or identified a MongoDB database server (or server cluster) with an exposed endpoint URL. This endpoint URL is assigned to the application's environment variable `MONGODB_URL `
+The **second way** is to run Seat Saver has a multi-instance distributed application in a Kubernetes cluster. To do this you will need to have created or identified a MongoDB database server (or server cluster) with an exposed endpoint URL. This endpoint URL is assigned to the application's environment variable `MONGODB_URL `
 
-Also, you will need to have created or identified an Redis message broker server or server cluster that has an endpoint exposed to the internet. This endpoint is assigned to the application's environment variable `MESSAGE_BROKER_HOST`. Seat Saver will support the default port number for Redis, `63791` by default. Should you decide to use an alternate port, then you need to see this port number needs to be assigned to the application's environment variable, `MESSAGE_BROKER_PORT`.
+Also, you will need to have created or identified an Redis message broker server or server cluster that has an endpoint exposed to the internet. This endpoint is assigned to the application's environment variable `MESSAGE_BROKER_HOST`. Seat Saver will support the default port number for Redis, `6379` by default. Should you decide to use an alternate port, then you need to see this port number needs to be assigned to the application's environment variable, `MESSAGE_BROKER_PORT`.
 
-The **third way** is to install seat saver as a standalone application on the host. This method requires configuring Seat Saver with references to running instances of MongoDB and Redis. These instances can be out on the internet or on an internal network. The references to MongoDB and Redis are defined their URLs. Typically these URLs will container username/password information.
+The **third way** is to install Seat Saver as a standalone application on the host. This method requires configuring Seat Saver with references to running instances of MongoDB and Redis. These instances can be out on the internet or on an internal network. The references to MongoDB and Redis are defined by their URLs. Typically these URLs will contain username/password information.
 
 These URLs need to be assigned to specific environment variables on the host machine(s) where Seat Saver is running.
 

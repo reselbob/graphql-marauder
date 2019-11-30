@@ -24,17 +24,19 @@ The **third way** is to install seat saver as a standalone application on the ho
 
 These URLs need to be assigned to specific environment variables on the host machine(s) where Seat Saver is running.
 
+## Seat Saver Environment Variables
+
 The environment variable for the MongoDB reference is:
 
-`MONGODB_URL`
+`MONGODB_URL`, the URL that describes the location the MongoDB server, along with the username and password should those be required.
 
 The environment variables for the Redis reference are:
 
-`MESSAGE_BROKER_HOST`
+`MESSAGE_BROKER_HOST` : The URL the defines the location of the Redis server message broker used by Seat-Saver 
 
-`MESSAGE_BROKER_PORT` (optional)
+`MESSAGE_BROKER_PORT` (optional), the port number associated with the Redis server. The default value is `6379`.
 
-`MESSAGE_BROKER_PASSWORD` (optional)
+`MESSAGE_BROKER_PASSWORD` (optional), the password, should one be required by Redis
 
 The sections that follow decribe how to setup Seat Saver as an application running under Docker Componse as well as running Seat Saver as a standalone application with references to MongoDB and Redis.
 
@@ -170,24 +172,39 @@ This query will list all the venues and seats avaiable for reservation.
 
 ![Katacoda access 3](./images/katacoda-access-03.png)
 
+You're now ready to exercise the Kubernetes installation of Seat Saver.
 
 ## Running Seat Saver as a Standalone Application
 
-TO BE PROVIDED
+**Step 1:** Clone the Seat Saver source code from the GitHub repository.
 
-### Dependency services requires
-* MongoDB
-* Redis
+`git clone https://github.com/reselbob/seat-saver`
 
-#### Setting the environment variable `MONGODB_URL`
+**Step 2:** Set the required environment variables as described in the section above, ***Seat Saver Environment Variables***.
 
-#### Setting Redis environment variables
+```text
+export MONGODB_URL=<some_value>
+export MESSAGE_BROKER_HOST=<some_value>
+export MESSAGE_BROKER_PORT=<some_value_optional>
+export MESSAGE_BROKER_PASSWORKD=<some_value_optional>
+```
+**Step 3:** Navigate to the directory that has the Seat Saver source  code.
 
-**Setting `MESSAGE_BROKER_HOST`**
+`cd seat-saver`
 
-**Setting `MESSAGE_BROKER_PORT`** (optional)
+**Step 4:** Install and run the application
+
+`npm install`
+
+`node index.js`
+
+**Step 5:** Access the Seat Saver API via GraphQL Playground. To to your web browser and access the API via `localhost:4000`.
+
+You're now ready to exercise the Seat Saver API via GraphQL Playground.
 
 ## Working with the Seat Saver API
+
+The following decribes the basic GraphQL types defined with the Seat Saver API.
 
 ### Venue
 
@@ -226,9 +243,11 @@ TO BE PROVIDED
 
 ## Subscriptions and Mutations
 
+The following describes some queries and mutations you can use against the Seat Saver API.
+
 ### Reserving a Seat
 
-Sample common query variable
+In order to make working with mutations against the Seat Saver API easier, you can use the following sample [query variable](https://blog.apollographql.com/the-anatomy-of-a-graphql-query-6dffa9e9e747).
 
 ```json
 {
@@ -247,10 +266,12 @@ Sample common query variable
 
 **reserveSeat**
 
+The following GraphQL mutation will reserve a seat and also generate a `SeatEvent` message to the subscription, `onSeatReserved`.
+
 ```graphql
 mutation reserveSeat($seat: SeatInput!) {
   reserveSeat(seat: $seat) {
-  	id
+  	 id
     number
     section
     status 
@@ -276,6 +297,8 @@ Output
 
 **onSeatReserved**
 
+In a separate browser window, execute the following GraphQL Query Language code to bind to the subscription, `onSeatReserved`.
+
 ```graphql
 subscription onSeatReserved{
   onSeatReserved{
@@ -289,7 +312,7 @@ subscription onSeatReserved{
 }
 ```
 
-Output
+Sample Output
 
 ```json
 {
@@ -308,12 +331,14 @@ Output
 
 ### Buying a Seat
 
+The following GraphQL mutation will buy a seat and also generate a `SeatEvent` message to the subscription, `onSeatSold`.
+
 **buySeat**
 
 ```graphql
 mutation buySeat($seat: SeatInput!) {
   buySeat(seat: $seat) {
-  	id
+  	 id
     number
     section
     status 
@@ -321,7 +346,7 @@ mutation buySeat($seat: SeatInput!) {
 }
 ```
 
-Output
+Sample Output
 
 ```json
 {
@@ -338,6 +363,8 @@ Output
 ----
 **onSeatSold**
 
+In a separate browser window, execute the following GraphQL Query Language code to bind to the subscription, `onSeatSold`.
+
 ```graphql
 subscription onSeatSold{
   onSeatSold{
@@ -351,7 +378,7 @@ subscription onSeatSold{
 }
 ```
 
-Output
+Sample Output
 
 ```json
 {
@@ -370,12 +397,14 @@ Output
 ```
 ### Releasing a Seat
 
+The following GraphQL mutation will release a seat from either `RESERVERED` or `SOLD` stati and also generate a `SeatEvent` message to the subscription, `onSeatReleased `.
+
 **releaseSeat**
 
 ```graphql
 mutation releaseSeat($seat: SeatInput!) {
   releaseSeat(seat: $seat) {
-  	id
+  	 id
     number
     section
     status 
@@ -400,6 +429,8 @@ Output
 
 ----
 **onSeatReleased**
+
+In a separate browser window, execute the following GraphQL Query Language code to bind to the subscription, `onSeatReleased `.
 
 ```graphql
 subscription onSeatReleased{

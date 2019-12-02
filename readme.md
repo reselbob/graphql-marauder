@@ -29,7 +29,7 @@ Seat Saver is a GraphQL API written under Apollo Server. It relies upon access t
 
 ![General Architecture](./images/general-architecture.png).
 
-These backing services can exist anywhere, locally or on the internet, as long as the given service can be reached accordiing to a URL.
+These backing services can exist anywhere, locally or on the internet, as long as the given service can be reached according to a URL.
 
 
 ## Seat Saver Environment Variables

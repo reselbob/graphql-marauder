@@ -24,6 +24,14 @@ The **third way** is to install Seat Saver as a standalone application on the ho
 
 These URLs need to be assigned to specific environment variables on the host machine(s) where Seat Saver is running.
 
+## General Architecture
+Seat Saver is a GraphQL API written under Apollo Server. It relies upon access to a MongoDB database and a Redis PubSub Message broker. The MongoDB database is used to store data. The Redis message broker is the backing service that supports the physical message emission from the various subscriptions available via the Seat Saver subscription server.
+
+![General Architecture](./images/general-architecture.png).
+
+These backing services can exist anywhere, locally or on the internet, as long as the given service can be reached accordiing to a URL.
+
+
 ## Seat Saver Environment Variables
 
 The environment variable for the MongoDB reference is:

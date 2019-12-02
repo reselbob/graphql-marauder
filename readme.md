@@ -46,7 +46,7 @@ Also, there are sections that follow that provide examples for working with Grap
 ## Running Seat Saver as a Docker Compose Application
 
 (You can run this project under a Katabcoda Ubuntu Playground. Click [here](https://katacoda.com/courses/ubuntu/playground) to
-go to eh Ubuntu Playground.)
+go to the Ubuntu Playground.)
 
 **Step 1:** Clone the source into your host machine.
 

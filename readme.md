@@ -56,7 +56,7 @@ Also, there are sections that follow that provide examples for working with Grap
 (You can run this project under a Katabcoda Ubuntu Playground. Click [here](https://katacoda.com/courses/ubuntu/playground) to
 go to the Ubuntu Playground or just go here:
 
-`https://katacoda.com/courses/ubuntu/playground)`
+`https://katacoda.com/courses/ubuntu/playground`
 
 **Step 1:** Clone the source into your host machine.
 
